@@ -1,0 +1,33 @@
+<header>
+    <nav>
+        <div class="header">
+            <div class="nav-title-wrapper">
+                <span class="nav-title-first">Photo</span>
+                <span class="nav-title-second">album</span>
+            </div>
+
+            <div class="header-content">
+                <a class="home-link" routerLink="/albums" [class.hide]="hideHomeLink">Home</a>
+                <form>
+                    <input type="text" placeholder="Search" (keyup.enter)="onEnterSearchedText($event)">
+                </form>
+            </div>
+        </div>
+
+        <div class="menu-bar">
+            <div class="dropbtn" 
+                [class.active]="showDropdownMenu" 
+                (click)="showDropdownMenu = !showDropdownMenu">
+                <i class="fa fa-bars" aria-hidden="true" *ngIf="!showDropdownMenu" ></i>
+                <i class="fa fa-times" aria-hidden="true" *ngIf="showDropdownMenu"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dropdown-menu" *ngIf="showDropdownMenu">
+        <a class="home-link" routerLink="/albums" [class.hide]="hideHomeLink">Home</a>
+        <form>
+            <input type="text" placeholder="Search" (keyup.enter)="onEnterSearchedText($event)">
+        </form>
+    </div>
+</header>

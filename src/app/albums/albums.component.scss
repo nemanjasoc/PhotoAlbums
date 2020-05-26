@@ -1,0 +1,31 @@
+@import 'src/scss/variables';
+@import 'src/scss/mixins';
+
+.all-albums {
+    @include container;
+}
+
+.album {
+    @include item;
+    cursor: pointer;
+}
+
+.album-title {
+    @include title;
+    -webkit-line-clamp: 3;
+}
+
+.image-wrapper {
+    display: flex;
+    justify-content: center;
+
+    img {
+        @include image; 
+    }
+}
+
+.album-user-name {
+    color: white;
+    display: flex;
+    justify-content: center;
+}

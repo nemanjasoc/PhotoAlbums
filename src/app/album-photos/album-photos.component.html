@@ -1,0 +1,11 @@
+<div class="all-photos">
+    <mat-spinner *ngIf="loading" style="margin:25px auto;"></mat-spinner>
+    
+    <div class="photo" *ngFor="let photo of photos">
+        <span class="photo-title">{{ photo.title}}</span>
+        <div class="image-wrapper">
+            <img [src]="photo.thumbnailUrl">
+        </div>
+        <button mat-raised-button (click)="removePhoto(photo)">Remove photo</button>
+    </div>
+</div>

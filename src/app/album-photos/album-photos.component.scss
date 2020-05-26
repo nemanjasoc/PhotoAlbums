@@ -1,0 +1,33 @@
+@import 'src/scss/variables';
+@import 'src/scss/mixins';
+
+.all-photos {
+    @include container;
+}
+
+.photo {
+    @include item;
+    position: relative;
+}
+
+.photo-title {
+    @include title;
+    -webkit-line-clamp: 2;
+}
+
+.image-wrapper {
+    display: flex;
+    justify-content: center;
+
+    img {
+        @include image;
+    }
+}
+
+.mat-raised-button {
+    line-height: 26px;
+    background-color: $green-border-color;
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+}
