@@ -2,7 +2,7 @@
     <mat-spinner *ngIf="loading" style="margin:25px auto;"></mat-spinner>
 
     <div class="album" 
-        *ngFor="let album of albums; let i = index" 
+        *ngFor="let album of filteredAlbums; let i = index" 
         routerLink="/album-photos" 
         (click)="showAlbumPhotos(album)">
         <span class="album-title">{{ album.title }}</span>

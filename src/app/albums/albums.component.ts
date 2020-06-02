@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlbumService } from '../service/album-service';
 import { Album, User } from '../albums/albums';
+import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: './albums.component.html',
@@ -8,26 +9,41 @@ import { Album, User } from '../albums/albums';
 })
 export class AlbumsComponent implements OnInit {
   albums: Album[] = [];
+  filteredAlbums: Album[] = [];
   users: User[] = [];
   errorMessage: string;
   loading = false;
 
+  subscribeToSearchedTextSubscription: Subscription;
 
   constructor(public albumService: AlbumService) { }
 
 
   ngOnInit(): void {
-    this.subscribeAlbums();
-    this.subscribeUsers();
+    this.getAlbums();
+    this.getUsers();
+    this.subscribeToSearchedTextChange();
   }
 
-  subscribeAlbums() {
+  subscribeToSearchedTextChange() {
+    this.subscribeToSearchedTextSubscription = this.albumService.searchedTextChangedObservable()
+      .subscribe(result => {
+        if(!result || !result.length) {
+          this.filteredAlbums = this.albums.slice();
+          return;
+        }
+
+        this.filteredAlbums = this.albums.filter(item => {
+          return item.title.toLocaleLowerCase().includes(result.toLocaleLowerCase());
+        })
+      })
+  }
+
+  getAlbums() {
     this.loading = true;
     this.albumService.getAlbums().subscribe(
       data => {
         this.albums = data;
-        console.log("albums: ", this.albums)
-        //this.searchText();
         this.loading = false;
       },
       err => {
@@ -37,13 +53,12 @@ export class AlbumsComponent implements OnInit {
     )
   }
 
-  subscribeUsers() {
+  getUsers() {
     this.loading = true;
     this.albumService.getUsers().subscribe(
       data => {
         this.users = data;
         this.loading = false;
-
         var newAlbums = [];
         for (let i = 0; i < this.users.length; i++) {
           let currentUser = this.users[i];
@@ -59,6 +74,7 @@ export class AlbumsComponent implements OnInit {
 
         }
         this.albums = newAlbums;
+        this.filteredAlbums = this.albums.slice();
       },
       err => {
         this.errorMessage = err;
@@ -71,14 +87,5 @@ export class AlbumsComponent implements OnInit {
     this.albumService.selectedAlbum(album);
   }
 
-  // searchText() {
-  //   console.log("this.albumService.searchedText:", this.albumService.searchedText)
-  //   if (this.albumService.searchedText === null || this.albumService.searchedText === undefined || this.albumService.searchedText === '') {
-  //     return this.albums;
-  //   } else {
-  //     const filtered = this.albums.filter(album => album.title.indexOf(this.albumService.searchedText.toLowerCase()) >= 0)
-  //     this.albums = filtered;
-  //   }
-  // }
 
 }

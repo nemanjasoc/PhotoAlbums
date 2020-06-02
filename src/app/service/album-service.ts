@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { throwError, Observable } from 'rxjs';
+import { throwError, Observable, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Album, User, Photo } from '../albums/albums';
 
@@ -12,14 +12,19 @@ export class AlbumService {
   allUsers: User[];
   allPhotos: Photo[];
   album: Album;
-  searchedText: string;
+
+  private searchedTextChanged = new Subject<string>();
 
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient) { }
 
 
-  setSearchedText(searchedText: string) {
-    this.searchedText = searchedText;
+  searchedTextChangedObservable(): Observable<string> {
+    return this.searchedTextChanged.asObservable();
+  }
+
+  searchedTextChangedNotify(value: string) {
+    this.searchedTextChanged.next(value);
   }
 
   selectedAlbum(album: Album) {
@@ -61,5 +66,5 @@ export class AlbumService {
     console.error(errorMessage);
     return throwError(errorMessage);
   }
-    
+
 }

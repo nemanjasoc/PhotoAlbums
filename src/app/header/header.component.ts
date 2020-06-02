@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AlbumService } from '../service/album-service';
@@ -8,7 +8,7 @@ import { AlbumService } from '../service/album-service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   showDropdownMenu = false;
   hideHomeLink = false;
 
@@ -25,11 +25,8 @@ export class HeaderComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {
-  }
-
   onEnterSearchedText(event): void {
-    this.albumService.setSearchedText(event.target.value);
+    this.albumService.searchedTextChangedNotify(event.target.value);
   }
 
 }
