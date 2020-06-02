@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlbumService } from '../service/album-service';
-import { Album, User } from '../albums/albums';
+import { Album } from '../albums/albums';
 import { Subscription} from 'rxjs';
 
 @Component({
@@ -13,9 +13,6 @@ export class AlbumsComponent implements OnInit {
   errorMessage: string;
   loading = false;
 
-  responseDataAlbums: Album[] = [];
-  responseDataUsers: User[] = [];
-
   subscribeToSearchedTextSubscription: Subscription;
 
   constructor(public albumService: AlbumService) { }
@@ -24,16 +21,14 @@ export class AlbumsComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.albumService.getAlbumsAndUsers().subscribe(responseList => {
-      this.responseDataAlbums = responseList[0];
-      this.responseDataUsers = responseList[1];
 
       var newAlbums = [];
-      for (let i = 0; i < this.responseDataUsers.length; i++) {
-        let currentUser = this.responseDataUsers[i];
+      for (let i = 0; i < responseList[1].length; i++) {
+        let currentUser = responseList[1][i];
   
         let currentAlbum;
-        for (let j = 0; j < this.responseDataAlbums.length; j++) {
-          currentAlbum = this.responseDataAlbums[j];
+        for (let j = 0; j < responseList[0].length; j++) {
+          currentAlbum = responseList[0][j];
           if (currentAlbum.userId === currentUser.id) {
             currentAlbum.userName = currentUser.name
             newAlbums.push(currentAlbum)

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AlbumService } from '../service/album-service';
 import { Photo } from '../albums/albums';
 import { Subscription } from 'rxjs';
-import { PhotoService } from '../service/photo-service';
 
 @Component({
   templateUrl: './album-photos.component.html',
@@ -14,36 +13,34 @@ export class AlbumPhotosComponent implements OnInit {
   errorMessage: string;
   loading = false;
   
-  subscribeToSearchedPhotoTextSubscription: Subscription;
+  subscribeToSearchedTextSubscription: Subscription;
   
-  constructor(public albumService: AlbumService, public photoService: PhotoService) { }
+  constructor(public albumService: AlbumService) { }
 
 
   ngOnInit(): void {
     this.loading = true;
     this.albumService.getPhotos().subscribe(
       data => {
-        this.photos = data;
-        this.loading = false;
-
-        const filtered = this.photos.filter(photo => photo.albumId === this.albumService.album.id)
+        const filtered = data.filter(photo => photo.albumId === this.albumService.album.id)
         this.photos = filtered;
-        this.filteredPhotos = this.photos;
+        this.filteredPhotos = this.photos.slice();
+        this.loading = false;
       },
         err => {
           this.errorMessage = err;
           this.loading = false;
         }
       )
-      
-    this.subscribeToSearchedPhotoTextChange();
+
+    this.subscribeToSearchedTextChange();
   }
 
-  subscribeToSearchedPhotoTextChange() {
-    this.subscribeToSearchedPhotoTextSubscription = this.photoService.searchedPhotoTextChangedObservable()
+  subscribeToSearchedTextChange() {
+    this.subscribeToSearchedTextSubscription = this.albumService.searchedTextChangedObservable()
       .subscribe(result => {
         if(!result || !result.length) {
-          this.filteredPhotos = this.photos;
+          this.filteredPhotos = this.photos.slice();
           return;
         }
 
@@ -55,7 +52,7 @@ export class AlbumPhotosComponent implements OnInit {
 
   removePhoto(photo: Photo) {
     const filtered = this.photos.filter(currentPhoto => currentPhoto.id !== photo.id) 
-    this.photos = filtered;
+    this.filteredPhotos = filtered;
   }
 
 }
