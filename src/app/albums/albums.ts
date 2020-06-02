@@ -7,7 +7,7 @@ export interface Album {
 
 export interface User {
     id: number;
-    name: number;
+    name: string;
 }
 
 export interface Photo {

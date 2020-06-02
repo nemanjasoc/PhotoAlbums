@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlbumService } from '../service/album-service';
 import { Album, User } from '../albums/albums';
-import { Subscription } from 'rxjs';
+import { Subscription} from 'rxjs';
 
 @Component({
   templateUrl: './albums.component.html',
@@ -10,9 +10,11 @@ import { Subscription } from 'rxjs';
 export class AlbumsComponent implements OnInit {
   albums: Album[] = [];
   filteredAlbums: Album[] = [];
-  users: User[] = [];
   errorMessage: string;
   loading = false;
+
+  responseDataAlbums: Album[] = [];
+  responseDataUsers: User[] = [];
 
   subscribeToSearchedTextSubscription: Subscription;
 
@@ -20,8 +22,30 @@ export class AlbumsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getAlbums();
-    this.getUsers();
+    this.loading = true;
+    this.albumService.getAlbumsAndUsers().subscribe(responseList => {
+      this.responseDataAlbums = responseList[0];
+      this.responseDataUsers = responseList[1];
+
+      var newAlbums = [];
+      for (let i = 0; i < this.responseDataUsers.length; i++) {
+        let currentUser = this.responseDataUsers[i];
+  
+        let currentAlbum;
+        for (let j = 0; j < this.responseDataAlbums.length; j++) {
+          currentAlbum = this.responseDataAlbums[j];
+          if (currentAlbum.userId === currentUser.id) {
+            currentAlbum.userName = currentUser.name
+            newAlbums.push(currentAlbum)
+          }
+        }
+      }
+  
+      this.albums = newAlbums;
+      this.filteredAlbums = this.albums.slice();
+      this.loading = false;
+    });
+    
     this.subscribeToSearchedTextChange();
   }
 
@@ -37,50 +61,6 @@ export class AlbumsComponent implements OnInit {
           return item.title.toLocaleLowerCase().includes(result.toLocaleLowerCase());
         })
       })
-  }
-
-  getAlbums() {
-    this.loading = true;
-    this.albumService.getAlbums().subscribe(
-      data => {
-        this.albums = data;
-        this.loading = false;
-      },
-      err => {
-        this.errorMessage = err;
-        this.loading = false;
-      }
-    )
-  }
-
-  getUsers() {
-    this.loading = true;
-    this.albumService.getUsers().subscribe(
-      data => {
-        this.users = data;
-        this.loading = false;
-        var newAlbums = [];
-        for (let i = 0; i < this.users.length; i++) {
-          let currentUser = this.users[i];
-
-          let currentAlbum;
-          for (let j = 0; j < this.albums.length; j++) {
-            currentAlbum = this.albums[j];
-            if (currentAlbum.userId === currentUser.id) {
-              currentAlbum.userName = currentUser.name
-              newAlbums.push(currentAlbum)
-            }
-          }
-
-        }
-        this.albums = newAlbums;
-        this.filteredAlbums = this.albums.slice();
-      },
-      err => {
-        this.errorMessage = err;
-        this.loading = false;
-      }
-    )
   }
 
   showAlbumPhotos(album: Album): void {
