@@ -5,6 +5,11 @@ export interface Album {
     userName: string;
 }
 
+export interface User {
+    id: number;
+    name: string;
+}
+
 export interface Photo {
     albumId: number;
     id: number;
