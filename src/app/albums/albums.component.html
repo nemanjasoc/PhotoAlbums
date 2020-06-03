@@ -7,7 +7,7 @@
         (click)="showAlbumPhotos(album)">
         <span class="album-title">{{ album.title }}</span>
         <div class="image-wrapper">
-            <img src="../../assets/images/album1.jpg">
+            <img src="{{'../../assets/images/album' + i + '.jpg'}}">
         </div>
         <span class="album-user-name">{{ album.userName }}</span>
     </div>
