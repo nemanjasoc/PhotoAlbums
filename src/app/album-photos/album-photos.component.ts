@@ -3,12 +3,14 @@ import { ApiService } from '../service/api.service';
 import { SearchService } from '../service/search.service';
 import { Photo } from '../albums/albums';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   templateUrl: './album-photos.component.html',
   styleUrls: ['./album-photos.component.scss']
 })
 export class AlbumPhotosComponent implements OnInit {
+  urlAlbumId: number;
   photos: Photo[] = [];
   filteredPhotos: Photo[] = [];
   errorMessage: string;
@@ -17,19 +19,26 @@ export class AlbumPhotosComponent implements OnInit {
   subscribeToSearchedTextSubscription: Subscription;
 
   constructor(public apiService: ApiService,
-    public searchService: SearchService) { }
+    public searchService: SearchService, private route: ActivatedRoute) { }
 
 
   ngOnInit(): void {
+    this.getAlbumById();
     this.getData();
     this.subscribeToSearchedTextChange();
+  }
+
+  getAlbumById() {
+    this.route.params.subscribe(params => {
+      this.urlAlbumId = Number(params.albumId);
+    });
   }
 
   getData() {
     this.loading = true;
     this.apiService.getPhotos().subscribe(
       data => {
-        this.photos = data.filter(photo => photo.albumId === this.apiService.album.id);
+        this.photos = data.filter(photo => photo.albumId === this.urlAlbumId);
         this.filteredPhotos = this.photos.slice();
         this.loading = false;
       },

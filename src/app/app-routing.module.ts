@@ -4,8 +4,8 @@ import { AlbumsComponent } from './albums/albums.component';
 import { AlbumPhotosComponent } from './album-photos/album-photos.component';
 
 const routes: Routes = [
-  { path: 'albums', component: AlbumsComponent },
-  { path: 'album-photos', component: AlbumPhotosComponent },
+  { path: 'albums', component: AlbumsComponent }, 
+  { path: 'albums/:albumId', component: AlbumPhotosComponent },
   { path: '', redirectTo: 'albums', pathMatch: 'full' },
   { path: '**', redirectTo: 'albums', pathMatch: 'full'}
 ];

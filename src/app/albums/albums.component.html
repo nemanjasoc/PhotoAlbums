@@ -1,14 +1,13 @@
 <div class="all-albums">
     <mat-spinner *ngIf="loading" style="margin:25px auto;"></mat-spinner>
 
-    <div class="album" 
-        *ngFor="let album of filteredAlbums; let i = index" 
-        routerLink="/album-photos" 
-        (click)="showAlbumPhotos(album)">
+    <a class="album" 
+        *ngFor="let album of filteredAlbums; let i = index"
+        [routerLink]="['/albums', album.id]"> 
         <span class="album-title">{{ album.title }}</span>
         <div class="image-wrapper">
             <img src="{{'../../assets/images/album' + i + '.jpg'}}">
         </div>
         <span class="album-user-name">{{ album.userName }}</span>
-    </div>
+    </a>
 </div>

@@ -57,9 +57,4 @@ export class AlbumsComponent implements OnInit {
       });
   }
 
-  showAlbumPhotos(album: Album): void {
-    this.apiService.selectedAlbum(album);
-  }
-
-
 }

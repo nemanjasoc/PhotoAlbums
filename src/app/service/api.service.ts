@@ -9,15 +9,10 @@ const apiUrl = 'http://jsonplaceholder.typicode.com';
   providedIn: 'root'
 })
 export class ApiService {
-  album: Album;
 
 
   constructor(public http: HttpClient) { }
 
-
-  selectedAlbum(album: Album) {
-    this.album = album;
-  }
 
   getAlbums(): Observable<Album[]> {
     return this.http.get<Album[]>(`${apiUrl}/albums`);
